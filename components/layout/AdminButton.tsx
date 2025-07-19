@@ -10,6 +10,7 @@ export default function LoginButton() {
   const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [mounted, setMounted] = useState(false)
+  const admin = localStorage.getItem("isAdmin")
 
   useEffect(() => {
     setMounted(true)
@@ -25,15 +26,29 @@ export default function LoginButton() {
   // Prevent hydration mismatch
   if (!mounted) return null
 
+  
+
+
   if (user) {
     return (
       <>
         <div className="mr-7">
-          <Link href="/user-admin">
+          {admin? 
+          (
+            <Link href="/admin">
           <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
             Dashboard
           </span>
         </Link>
+          ) : (
+            <Link href="/user-admin">
+          <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
+            Dashboard
+          </span>
+        </Link>
+          )  
+        }
+          
         <Link href="/profile">
           <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
             Profile
