@@ -28,7 +28,8 @@ export default function LoginButton() {
   if (user) {
     return (
       <>
-        <Link href="/user-admin">
+        <div className="mr-7">
+          <Link href="/user-admin">
           <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
             Dashboard
           </span>
@@ -38,6 +39,7 @@ export default function LoginButton() {
             Profile
           </span>
         </Link>
+        </div>
       </>
     )
   }

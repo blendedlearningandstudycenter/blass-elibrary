@@ -13,7 +13,7 @@ export function Header({ onAddBook }: HeaderProps) {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b sticky top-0 z-50"
+      className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b sticky top-0 z-30"
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
