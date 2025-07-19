@@ -2,7 +2,7 @@
 
 import { useBooks } from "@/hooks/useBooks"
 import { db } from "@/lib/firebase"
-import { collection, getDocs, doc, getDoc } from "firebase/firestore"
+import { doc, getDoc } from "firebase/firestore"
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowBigLeft, DeleteIcon, Edit, SaveIcon, Trash, View, X} from "lucide-react"
