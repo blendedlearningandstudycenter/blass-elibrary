@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("")
     setLoading(true)
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password) || await signInWithPopup(auth, new GoogleAuthProvider());
+      const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password) ;
       if (!userCredential) {
         throw new Error("Login failed. Please try again.")
       }
@@ -65,8 +65,8 @@ export default function LoginPage() {
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
       const user = result.user
-      const adminDoc = await getDoc(doc(db, "admins", user.uid))
-      if (adminDoc.exists()) {
+      const adminDoc = await getDoc(doc(db, "users", user.uid))
+      if (adminDoc.exists() && adminDoc.data().role === "admin") {
         localStorage.setItem("isAdmin", "true")
         localStorage.setItem("userEmail", user.email || "")
         router.push("/admin")
