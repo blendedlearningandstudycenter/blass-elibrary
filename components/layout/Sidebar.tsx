@@ -2,9 +2,20 @@
 
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Sidebar() {
+  const [logged, setLogged] = useState<string | null>(null);
+  const [admin, setAdmin] = useState<string | null>(null);
+
+  // Safe localStorage access
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setLogged(localStorage.getItem('userlogged'));
+      setAdmin(localStorage.getItem('isAdmin'));
+    }
+  }, []);
+
   return (
     <aside className="h-full w-64 bg-[#f8f9f4] border-l border-[#dbaf2c] flex flex-col p-6 fixed right-0 top-0 bottom-0 z-40">
       <div className="mb-8">
@@ -22,10 +33,19 @@ export function Sidebar() {
         </ul>
       </div>
       <div className="mt-auto">
-        <h2 className="text-xl font-bold text-[#70992f] mb-4">Register to Upload Books</h2>
+        <h2 className="text-xl font-bold text-[#70992f] mb-4"> {logged? "Register to Upload Books": "" }</h2>
         <div className="flex flex-col gap-2">
-          <Link href="/register/individual" className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Register as Individual</Link>
-          <Link href="/register/school" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as School</Link>
+          {!logged ? (
+            <>
+              <Link href={!admin ? "/user-admin" : "/admin"} className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Dashboard</Link>
+              <Link href="/profile" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Profile</Link>
+            </>
+          ) : (
+            <>
+              <Link href="/register/individual" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as Individual</Link>
+              <Link href="/register/school" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as School</Link>
+            </>
+          )}
         </div>
       </div>
     </aside>
@@ -35,6 +55,16 @@ export function Sidebar() {
 
 export function SidebarMobile(){
   const [isOpen, setIsOpen] = useState(false)
+    const [logged, setLogged] = useState<string | null>(null);
+  const [admin, setAdmin] = useState<string | null>(null);
+
+  // Safe localStorage access
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setLogged(localStorage.getItem('userlogged'));
+      setAdmin(localStorage.getItem('isAdmin'));
+    }
+  }, []);
 
   return (
     <>
@@ -69,9 +99,18 @@ export function SidebarMobile(){
         <div className="mt-auto">
           <h2 className="text-xl font-bold text-[#70992f] mb-4">Register to Upload Books</h2>
           <div className="flex flex-col gap-2">
-            <Link href="/register/individual" className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Register as Individual</Link>
-            <Link href="/register/school" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as School</Link>
-          </div>
+          {!logged ? (
+            <>
+              <Link href={!admin ? "/user-admin" : "/admin"} className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Dashboard</Link>
+              <Link href="/profile" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Profile</Link>
+            </>
+          ) : (
+            <>
+              <Link href="/register/individual" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as Individual</Link>
+              <Link href="/register/school" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as School</Link>
+            </>
+          )}
+        </div>
         </div>
       </aside>
 

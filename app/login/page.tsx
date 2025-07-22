@@ -7,12 +7,14 @@ import { doc, getDoc } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
 import Link from "next/link"
 import { ArrowBigLeft } from "lucide-react"
+import { set } from "react-hook-form"
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" })
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [user, setUser] = useState<boolean>(false)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
@@ -33,6 +35,7 @@ export default function LoginPage() {
         throw new Error("User data not found.")
       }
       // Access the user object
+
       console.log("User data:", userCredential.user)
       const user = userCredential.user
       console.log("User logged in:", user)
@@ -74,6 +77,10 @@ export default function LoginPage() {
         localStorage.setItem("isAdmin", "false")
         localStorage.setItem("userEmail", user.email || "")
         router.push("/user-admin")
+      }
+      setUser(true);
+      if(user){
+        localStorage.setItem('userlogged', "true")
       }
     } catch (err: any) {
       setError(err.message || "Google sign-in failed.")

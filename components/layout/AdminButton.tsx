@@ -10,7 +10,7 @@ export default function LoginButton() {
   const pathname = usePathname()
   const [user, setUser] = useState<any>(null)
   const [mounted, setMounted] = useState(false)
-  const admin = localStorage.getItem("isAdmin")
+  const logged = localStorage.getItem('userlogged');
 
   useEffect(() => {
     setMounted(true)
@@ -29,7 +29,7 @@ export default function LoginButton() {
   
 
 
-  if (user) {
+/*   if (user) {
     return (
       <>
         <div className="mr-7">
@@ -58,12 +58,23 @@ export default function LoginButton() {
       </>
     )
   }
-
+ */
   return (
-    <Link href="/login">
-      <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
-        Login
-      </span>
-    </Link>
+    <>
+      {logged? 
+        (
+          <Link href="/login">
+            <span className="ml-4 px-2 py-0.5 border-b border-primary text-primary transition-transform duration-150 hover:-translate-y-0.5 hover:border-b-2">
+              Login
+            </span>
+          </Link>
+         )
+         : 
+         (
+          null
+         )
+     }
+    </>
+    
   )
 }
