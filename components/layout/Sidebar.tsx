@@ -106,8 +106,9 @@ export function SidebarMobile(){
             </>
           ) : (
             <>
+             <Link href="/login" className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Login</Link>
               <Link href="/register/individual" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as Individual</Link>
-              <Link href="/register/school" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Register as School</Link>
+              <Link href="/register/school" className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Register as School</Link>
             </>
           )}
         </div>
