@@ -38,8 +38,9 @@ export default function RegisterSchool() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-       <Link href = "/"><ArrowBigLeft className="text-primary "/></Link>
+     
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-[#dbaf2c]">
+        <Link href = "/"><ArrowBigLeft className="text-primary "/></Link>
         <h1 className="text-2xl font-bold mb-6 text-[#70992f]">Register as School</h1>
         <input className="w-full mb-4 p-3 border border-[#dbaf2c] rounded" placeholder="School Name" required value={form.schoolName} onChange={e => setForm(f => ({...f, schoolName: e.target.value}))} />
         <input className="w-full mb-4 p-3 border border-[#dbaf2c] rounded" placeholder="Contact Email" type="email" required value={form.contactEmail} onChange={e => setForm(f => ({...f, contactEmail: e.target.value}))} />

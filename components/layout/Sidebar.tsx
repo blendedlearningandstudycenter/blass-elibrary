@@ -97,7 +97,7 @@ export function SidebarMobile(){
           </ul>
         </div>
         <div className="mt-auto">
-          <h2 className="text-xl font-bold text-[#70992f] mb-4">Register to Upload Books</h2>
+       
           <div className="flex flex-col gap-2">
           {logged ? (
             <>
