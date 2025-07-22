@@ -3,6 +3,11 @@
     "origin": ["http://localhost:3000", "https://blass-elibrary-82im.vercel.app"],
     "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "maxAgeSeconds": 3600,
-    "responseHeader": ["Content-Type", "Authorization"]
+    "responseHeader": [
+      "Content-Type",
+      "Authorization",
+      "x-goog-resumable",
+      "x-goog-meta-*"
+    ]
   }
 ]

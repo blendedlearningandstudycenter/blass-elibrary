@@ -22,7 +22,7 @@ export function Header({ onAddBook }: HeaderProps) {
               <BookOpen className="h-6 w-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">BLASS LIBRARY</h1>
+              <h1 className="text-2xl font-bold">BLASS COLLEGE E-library </h1>
               <p className="text-sm text-muted-foreground">Discover knowledge, one book at a time</p>
             </div>
           </div>
