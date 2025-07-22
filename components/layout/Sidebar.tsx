@@ -35,7 +35,7 @@ export function Sidebar() {
       <div className="mt-auto">
         <h2 className="text-xl font-bold text-[#70992f] mb-4"> {logged? "Register to Upload Books": "" }</h2>
         <div className="flex flex-col gap-2">
-          {!logged ? (
+          {logged ? (
             <>
               <Link href={!admin ? "/user-admin" : "/admin"} className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Dashboard</Link>
               <Link href="/profile" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Profile</Link>
@@ -99,7 +99,7 @@ export function SidebarMobile(){
         <div className="mt-auto">
           <h2 className="text-xl font-bold text-[#70992f] mb-4">Register to Upload Books</h2>
           <div className="flex flex-col gap-2">
-          {!logged ? (
+          {logged ? (
             <>
               <Link href={!admin ? "/user-admin" : "/admin"} className="bg-[#70992f] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#55731f] transition">Dashboard</Link>
               <Link href="/profile" className="bg-[#dbaf2c] text-white px-4 py-2 rounded-lg font-semibold text-center hover:bg-[#b98d1e] transition">Profile</Link>

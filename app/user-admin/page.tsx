@@ -8,6 +8,7 @@ import Link from "next/link"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
+import Loading from "../loading"
 
 export default function UserAdminDashboard() {
   const [currentUser, setCurrentUser] = useState<any>(null)
@@ -34,12 +35,28 @@ export default function UserAdminDashboard() {
     return () => unsubscribe()
   }, [])
 
+
   const { books, addBook, deleteBook, updateBook, loading, error } = useBooks(currentUser)
   const [viewBook, setViewBook] = useState<any | null>(null)
   const [editForm, setEditForm] = useState<any>({})
 
-  if (loadingUser) return <div className="p-8">Loading...</div>
-  if (!currentUser) return <div className="p-8">You must be logged in to view this page.</div>
+  if (loadingUser) return <div className="p-8"><Loading funtion='loading dashboard'/></div>
+  if (!currentUser) {
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const timeout = setTimeout(() => router.push("/login"), 2000)
+        return () => clearTimeout(timeout)
+      }
+    }, [])
+    return (
+      <>
+        <div className="h-screen w-full flex items-center justify-center">
+          <h1 className="flex text-2xl font-bold text-capitalize text-red-600">ooops!</h1>
+          <p>you must be logged in to view this page </p>
+        </div>
+      </>
+    )
+  }
 
   // Only show books added by this user
   const userBooks = books.filter((b: any) => b.addedBy === currentUser.uid)
