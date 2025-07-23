@@ -25,6 +25,7 @@ export function useBooks(currentUser?: { uid: string, email: string, role: strin
           id: docSnap.id,
           ...data,
           tags: Array.isArray(data.tags) ? data.tags : (data.tags ? data.tags.split(",").map((t: string) => t.trim()) : []),
+          bookFileUrl: data.bookFileUrl || ""
         } as Book)
       })
       // Filter by role
@@ -65,13 +66,19 @@ export function useBooks(currentUser?: { uid: string, email: string, role: strin
       }
 
       let coverImageUrl = ""
+      let bookFileUrl = ""
       const coverImageFile = formData.get("coverImage") as File | null
       if (coverImageFile && coverImageFile.size > 0) {
         const storageRef = ref(storage, `book-covers/${Date.now()}-${coverImageFile.name}`)
         await uploadBytes(storageRef, coverImageFile)
         coverImageUrl = await getDownloadURL(storageRef)
       }
-
+      const bookFile = formData.get("bookFile") as File | null
+      if (bookFile && bookFile.size > 0) {
+        const fileRef = ref(storage, `book-files/${Date.now()}-${bookFile.name}`)
+        await uploadBytes(fileRef, bookFile)
+        bookFileUrl = await getDownloadURL(fileRef)
+      }
       const payload = {
         title: formData.get("title") as string,
         author: formData.get("author") as string,
@@ -82,6 +89,7 @@ export function useBooks(currentUser?: { uid: string, email: string, role: strin
         addedDate: new Date().toISOString(),
         rating: 0,
         coverImage: coverImageUrl,
+        bookFileUrl,
         addedBy: formData.get("addedBy") || "", // ensure addedBy is set from FormData
       }
       await addDoc(collection(db, "books"), payload)
@@ -108,7 +116,20 @@ export function useBooks(currentUser?: { uid: string, email: string, role: strin
   // Update book in Firestore
   const updateBook = async (bookId: string, updates: Partial<Book>): Promise<void> => {
     try {
-      await updateDoc(doc(db, "books", bookId), updates)
+      // If updates contain a File for coverImage or bookFile, upload and update URLs
+      let updatePayload = { ...updates }
+      if (updates.coverImage instanceof File) {
+        const storageRef = ref(storage, `book-covers/${Date.now()}-${updates.coverImage.name}`)
+        await uploadBytes(storageRef, updates.coverImage)
+        updatePayload.coverImage = await getDownloadURL(storageRef)
+      }
+      if (updates.bookFile instanceof File) {
+        const fileRef = ref(storage, `book-files/${Date.now()}-${updates.bookFile.name}`)
+        await uploadBytes(fileRef, updates.bookFile)
+        updatePayload.bookFileUrl = await getDownloadURL(fileRef)
+        delete updatePayload.bookFile // Remove raw file from payload
+      }
+      await updateDoc(doc(db, "books", bookId), updatePayload)
       await fetchBooks()
       toast({ title: "Book updated!", description: `Book was updated successfully.` })
     } catch (err) {

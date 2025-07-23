@@ -15,8 +15,18 @@ interface BookCardProps {
 }
 
 export function BookCard({ book, onBookClick }: BookCardProps) {
-  const handleReadBook = () => {
-    window.open(book.link, "_blank")
+  const handleReadBook = async () => {
+    if (!book.filePath) return
+    // Import Firebase storage functions
+    const { getStorage, ref, getDownloadURL } = await import("firebase/storage")
+    const storage = getStorage()
+    const fileRef = ref(storage, String(book.filePath))
+    try {
+      const url = await getDownloadURL(fileRef)
+      window.open(url, "_blank")
+    } catch (error) {
+      alert("Unable to open book file.")
+    }
   }
 
   return (

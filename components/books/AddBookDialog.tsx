@@ -18,7 +18,7 @@ interface AddBookDialogProps {
 }
 
 export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogProps) {
-  const [formData, setFormData] = useState<AddBookFormData & { coverImage?: File }>({
+  const [formData, setFormData] = useState<AddBookFormData & { coverImage?: File; bookFile?: File }>({
     title: "",
     author: "",
     description: "",
@@ -26,6 +26,7 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
     link: "",
     tags: "",
     coverImage: undefined,
+    bookFile: undefined,
   })
   const [errors, setErrors] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -49,6 +50,7 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
         link: "",
         tags: "",
         coverImage: undefined,
+        bookFile: undefined,
       })
       setErrors([])
       onOpenChange(false)
@@ -66,9 +68,9 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
     }
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: "coverImage" | "bookFile") => {
     const file = e.target.files?.[0]
-    setFormData((prev) => ({ ...prev, coverImage: file }))
+    setFormData((prev) => ({ ...prev, [type]: file }))
   }
 
   return (
@@ -163,7 +165,17 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
               id="coverImage"
               type="file"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={e => handleFileChange(e, "coverImage")}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="bookFile">Book File (PDF, EPUB, etc.)</Label>
+            <Input
+              id="bookFile"
+              type="file"
+              accept=".pdf,.epub,.doc,.docx,.txt,.mobi,.azw"
+              onChange={e => handleFileChange(e, "bookFile")}
             />
           </div>
         </div>

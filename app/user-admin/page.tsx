@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useBooks } from "@/hooks/useBooks"
 import { useRouter } from "next/navigation"
 import { ArrowBigLeft } from "lucide-react"
@@ -14,6 +14,8 @@ export default function UserAdminDashboard() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [loadingUser, setLoadingUser] = useState(true)
   const [form, setForm] = useState<any>({})
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const bookFileInputRef = useRef<HTMLInputElement>(null)
   const [showAdd, setShowAdd] = useState(false)
   const router = useRouter()
 
@@ -75,6 +77,9 @@ export default function UserAdminDashboard() {
       if (form.coverImage instanceof File) {
         payload.append('coverImage', form.coverImage)
       }
+      if (form.bookFile instanceof File) {
+        payload.append('bookFile', form.bookFile)
+      }
       // Debug: log FormData
       for (let pair of payload.entries()) {
         console.log('ADD_BOOK_PAYLOAD', pair[0]+ ':', pair[1])
@@ -82,6 +87,8 @@ export default function UserAdminDashboard() {
       await addBook(payload)
       setShowAdd(false)
       setForm({})
+      if (fileInputRef.current) fileInputRef.current.value = ""
+      if (bookFileInputRef.current) bookFileInputRef.current.value = ""
       router.refresh()
     } catch (err) {
       console.error('Error adding book:', err)
@@ -121,9 +128,16 @@ export default function UserAdminDashboard() {
           <input className="p-3 border border-[#dbaf2c] rounded" placeholder="Link" value={form.link || ""} onChange={e => setForm((f: any) => ({...f, link: e.target.value}))} />
           <div className="md:col-span-2">
             <label className="block mb-1 font-medium text-[#70992f]">Cover Image</label>
-            <input type="file" accept="image/*" className="w-full" onChange={e => {
+            <input ref={fileInputRef} type="file" accept="image/*" className="w-full" onChange={e => {
               const file = e.target.files?.[0]
               setForm((f: any) => ({ ...f, coverImage: file }))
+            }} />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 font-medium text-[#70992f]">Book File (PDF, EPUB, etc.)</label>
+            <input ref={bookFileInputRef} type="file" accept=".pdf,.epub,.doc,.docx,.txt,.mobi,.azw" className="w-full" onChange={e => {
+              const file = e.target.files?.[0]
+              setForm((f: any) => ({ ...f, bookFile: file }))
             }} />
           </div>
           <button className="md:col-span-2 bg-[#70992f] hover:bg-[#55731f] text-white px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200">Add</button>
