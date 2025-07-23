@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ExternalLink, User } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import type { Book } from "@/types"
-import { ANIMATION_VARIANTS } from "@/constants"
-import Image from "next/image"
+import { motion } from "framer-motion";
+import { ExternalLink, User } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import type { Book } from "@/types";
+import { ANIMATION_VARIANTS } from "@/constants";
+import Image from "next/image";
 
 interface BookCardProps {
-  book: Book
-  onBookClick?: (book: Book) => void
+  book: Book;
+  onBookClick?: (book: Book) => void;
 }
 
 export function BookCard({ book, onBookClick }: BookCardProps) {
   const handleReadBook = async () => {
-    if (!book.filePath) return
-    // Import Firebase storage functions
-    const { getStorage, ref, getDownloadURL } = await import("firebase/storage")
-    const storage = getStorage()
-    const fileRef = ref(storage, String(book.filePath))
     try {
-      const url = await getDownloadURL(fileRef)
-      window.open(url, "_blank")
+      if (!book.bookFileUrl) {
+        alert("Missing book file.");
+        return;
+      }
+      // Open the file directly (already a download URL)
+      window.open(`${book.bookFileUrl}?v=${Date.now()}`, "_blank");
     } catch (error) {
-      alert("Unable to open book file.")
+      console.error("Download error:", error);
+      alert("Unable to open book file.");
     }
-  }
+  };
 
   return (
     <motion.div layout {...ANIMATION_VARIANTS.fadeInUp} {...ANIMATION_VARIANTS.hover}>
@@ -36,27 +36,27 @@ export function BookCard({ book, onBookClick }: BookCardProps) {
           <div className="flex flex-col items-center gap-2">
             <div className="w-[140px] h-[198px] flex items-center justify-center mb-2">
               {book.coverImage ? (
-              <img
-                src={book.coverImage + '?v=' + new Date().getTime()}
-                alt={book.title}
-                className="w-[140px] h-[198px] object-cover rounded shadow border border-muted"
-                style={{ width: "140px", height: "198px" }}
-              />
+                <img
+                  src={book.coverImage + "?v=" + new Date().getTime()} // cache-busting for cover image
+                  alt={book.title}
+                  className="w-[140px] h-[198px] object-cover rounded shadow border border-muted"
+                  style={{ width: "140px", height: "198px" }}
+                />
               ) : (
-              <Image
-                src="/lib-plc.jpeg"
-                alt="placeholder"
-                width={140}
-                height={198}
-                className="w-[140px] h-[198px] object-cover rounded shadow border border-muted"
-                placeholder="blur"
-                blurDataURL="/lib-plc.jpeg"
-                loading="lazy"
-                quality={75}
-                draggable={false}
-                unoptimized
-                style={{ width: "140px", height: "198px" }}
-              />
+                <Image
+                  src="/lib-plc.jpeg"
+                  alt="placeholder"
+                  width={140}
+                  height={198}
+                  className="w-[140px] h-[198px] object-cover rounded shadow border border-muted"
+                  placeholder="blur"
+                  blurDataURL="/lib-plc.jpeg"
+                  loading="lazy"
+                  quality={75}
+                  draggable={false}
+                  unoptimized
+                  style={{ width: "140px", height: "198px" }}
+                />
               )}
             </div>
             <Badge variant="secondary" className="mb-2 px-3 py-1 text-xs font-semibold tracking-wide">
@@ -73,14 +73,16 @@ export function BookCard({ book, onBookClick }: BookCardProps) {
         </CardHeader>
 
         <CardContent className="pt-0 flex flex-col items-center">
-          <p className="text-sm text-muted-foreground line-clamp-3 mb-4 text-center max-w-xs">{book.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-3 mb-4 text-center max-w-xs">
+            {book.description}
+          </p>
 
-          <Button className="w-full bg-[#70992f] hover:bg-[#55731f] text-white font-semibold rounded-lg mt-2" onClick={handleReadBook}>
+          <Button variant="outline" size="sm" onClick={handleReadBook} className="w-full">
             <ExternalLink className="h-4 w-4 mr-2" />
             Read Book
           </Button>
         </CardContent>
       </Card>
     </motion.div>
-  )
+  );
 }
