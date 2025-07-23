@@ -1,7 +1,7 @@
 [
   {
-    "origin": ["http://localhost:3000", "https://blass-elibrary-82im.vercel.app"],
-    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "origin": ["http://localhost:3000", "https://blass-elibrary-82im.vercel.app", "https://3000-firebase-blass-elibrary-1753256131748.cluster-ikslh4rdsnbqsvu5nw3v4dqjj2.cloudworkstations.dev"],
+    "method": ["GET", "POST", "PUT", "DELETE"],
     "maxAgeSeconds": 3600,
     "responseHeader": [
       "Content-Type",
