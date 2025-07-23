@@ -28,7 +28,7 @@ export function BookListItem({ book, onBookClick }: BookListItemProps) {
               <div className="w-32 h-30 flex items-center justify-center mb-2">
                             {book.coverImage ? (
                               <img
-                                src={book.coverImage}
+                                src={book.coverImage + '?v=' + new Date().getTime()}
                                 alt={book.title}
                                 className="w-full h-full object-cover rounded shadow border border-muted"
                               />

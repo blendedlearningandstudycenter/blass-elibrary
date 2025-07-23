@@ -13,15 +13,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }; 
-/* const firebaseConfig = {
-  apiKey: "AIzaSyDbq-j31pjzsLqtvVMZFen5KUKY0iO2t-g",
-  authDomain: "blass-college.firebaseapp.com",
-  projectId: "blass-college",
-  storageBucket: "blass-college.firebasestorage.app",
-  messagingSenderId: "953411325932",
-  appId: "1:953411325932:web:bd0f69b6bc542d7328bac9",
-  measurementId: "G-01MKMJQ7M0"
-}; */
+// Remove this commented config to avoid confusion. Use only the correct .env value for storageBucket.
 
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

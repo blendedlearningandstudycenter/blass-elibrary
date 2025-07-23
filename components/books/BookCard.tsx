@@ -27,7 +27,7 @@ export function BookCard({ book, onBookClick }: BookCardProps) {
             <div className="w-[140px] h-[198px] flex items-center justify-center mb-2">
               {book.coverImage ? (
               <img
-                src={book.coverImage}
+                src={book.coverImage + '?v=' + new Date().getTime()}
                 alt={book.title}
                 className="w-[140px] h-[198px] object-cover rounded shadow border border-muted"
                 style={{ width: "140px", height: "198px" }}

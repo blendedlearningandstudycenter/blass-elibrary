@@ -18,13 +18,14 @@ interface AddBookDialogProps {
 }
 
 export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogProps) {
-  const [formData, setFormData] = useState<AddBookFormData>({
+  const [formData, setFormData] = useState<AddBookFormData & { coverImage?: File }>({
     title: "",
     author: "",
     description: "",
     category: "",
     link: "",
     tags: "",
+    coverImage: undefined,
   })
   const [errors, setErrors] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -38,6 +39,7 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
 
     try {
       setIsSubmitting(true)
+      // Pass coverImage as part of the payload
       await onAddBook(formData)
       setFormData({
         title: "",
@@ -46,6 +48,7 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
         category: "",
         link: "",
         tags: "",
+        coverImage: undefined,
       })
       setErrors([])
       onOpenChange(false)
@@ -61,6 +64,11 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
     if (errors.length > 0) {
       setErrors([])
     }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    setFormData((prev) => ({ ...prev, coverImage: file }))
   }
 
   return (
@@ -146,6 +154,16 @@ export function AddBookDialog({ open, onOpenChange, onAddBook }: AddBookDialogPr
               value={formData.tags}
               onChange={(e) => updateFormData("tags", e.target.value)}
               placeholder="JavaScript, Programming, Web Development"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="coverImage">Book Cover Image</Label>
+            <Input
+              id="coverImage"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
             />
           </div>
         </div>

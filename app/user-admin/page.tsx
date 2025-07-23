@@ -145,7 +145,7 @@ export default function UserAdminDashboard() {
               <tr key={book._id || book.id || idx} className="border-t border-[#dbaf2c] hover:bg-[#f6f2e3] transition">
                 <td className="p-3">
                   {book.coverImage ? (
-                    <img src={book.coverImage} alt="Cover" className="w-16 h-24 object-cover rounded border border-[#dbaf2c]" />
+                    <img src={book.coverImage + '?v=' + new Date().getTime()} alt="Cover" className="w-16 h-24 object-cover rounded border border-[#dbaf2c]" />
                   ) : (
                     <div className="w-16 h-24 bg-gray-200 flex items-center justify-center rounded text-gray-400">No Image</div>
                   )}
@@ -171,7 +171,7 @@ export default function UserAdminDashboard() {
             <h2 className="text-2xl font-bold mb-4 text-[#70992f]">Edit Book</h2>
             <div className="mb-4 flex flex-col items-center">
               {viewBook.coverImage ? (
-                <img src={viewBook.coverImage} alt="Cover" className="w-40 h-56 object-cover rounded mb-2 border border-[#dbaf2c]" />
+                <img src={viewBook.coverImage + '?v=' + new Date().getTime()} alt="Cover" className="w-40 h-56 object-cover rounded mb-2 border border-[#dbaf2c]" />
               ) : (
                 <div className="w-40 h-56 bg-gray-200 flex items-center justify-center rounded mb-2 text-gray-400">No Image</div>
               )}
