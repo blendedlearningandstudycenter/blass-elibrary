@@ -2,8 +2,8 @@ import { FirebaseStorage } from "firebase/storage"
 
 export interface Book {
   filePath(storage: FirebaseStorage, filePath: any): unknown
-  filePath: any
-  id: string
+/*   filePath: any
+ */  id: string
   title: string
   author: string
   description: string

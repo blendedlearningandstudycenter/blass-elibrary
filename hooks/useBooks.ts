@@ -118,16 +118,16 @@ export function useBooks(currentUser?: { uid: string, email: string, role: strin
     try {
       // If updates contain a File for coverImage or bookFile, upload and update URLs
       let updatePayload = { ...updates }
-      if (updates.coverImage instanceof File) {
-        const storageRef = ref(storage, `book-covers/${Date.now()}-${updates.coverImage.name}`)
-        await uploadBytes(storageRef, updates.coverImage)
+      if ((updates.coverImage as any) instanceof File) {
+        const storageRef = ref(storage, `book-covers/${Date.now()}-${(updates.coverImage as any).name}`)
+        await uploadBytes(storageRef, updates.coverImage as any)
         updatePayload.coverImage = await getDownloadURL(storageRef)
       }
-      if (updates.bookFile instanceof File) {
-        const fileRef = ref(storage, `book-files/${Date.now()}-${updates.bookFile.name}`)
-        await uploadBytes(fileRef, updates.bookFile)
+      if ((updates as any).bookFileRaw instanceof File) {
+        const fileRef = ref(storage, `book-files/${Date.now()}-${(updates as any).bookFileRaw.name}`)
+        await uploadBytes(fileRef, (updates as any).bookFileRaw)
         updatePayload.bookFileUrl = await getDownloadURL(fileRef)
-        delete updatePayload.bookFile // Remove raw file from payload
+        delete updatePayload.bookFileUrl // Remove raw file from payload
       }
       await updateDoc(doc(db, "books", bookId), updatePayload)
       await fetchBooks()
