@@ -20,10 +20,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log('[ProfilePage] onAuthStateChanged:', firebaseUser);
       setUser(firebaseUser)
       if (firebaseUser) {
         const userDoc = await getDoc(doc(db, "users", firebaseUser.uid))
         const data = userDoc.exists() ? userDoc.data() : null
+        console.log('[ProfilePage] Firestore userDoc:', data);
         setProfile(data)
         setForm({
           name: data?.name || data?.schoolName || "",
@@ -61,9 +63,15 @@ export default function ProfilePage() {
     router.push("/login")
   }
 
-  if (loading) return <Loading funtion='Loading profile page '/> 
-  
-  if (!user) return <div className="p-8">You must be logged in to view your profile.</div>
+  if (loading) {
+    console.log('[ProfilePage] Loading:', loading, 'User:', user, 'Profile:', profile);
+    return <Loading funtion='Loading profile page '/> 
+  }
+
+  if (!user) {
+    console.log('[ProfilePage] No user detected after loading.');
+    return <div className="p-8">You must be logged in to view your profile.</div>
+  }
 
   return (
     <div className="max-w-xl mx-auto my-16 bg-white p-8 rounded-xl shadow border border-[#dbaf2c]">
