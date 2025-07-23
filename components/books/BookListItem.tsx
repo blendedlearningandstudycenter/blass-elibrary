@@ -15,9 +15,20 @@ interface BookListItemProps {
 }
 
 export function BookListItem({ book, onBookClick }: BookListItemProps) {
-  const handleReadBook = () => {
-    window.open(book.link, "_blank")
-  }
+ 
+    const handleReadBook = async () => {
+    try {
+      if (!book.bookFileUrl) {
+        alert("Missing book file.");
+        return;
+      }
+      // Open the file directly (already a download URL)
+      window.open(`${book.bookFileUrl}?v=${Date.now()}`, "_blank");
+    } catch (error) {
+      console.error("Download error:", error);
+      alert("Unable to open book file.");
+    }
+  };
 
   return (
     <motion.div layout {...ANIMATION_VARIANTS.fadeInLeft}>
