@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useBooks } from "@/hooks/useBooks"
 import { useRouter } from "next/navigation"
-import { ArrowBigLeft } from "lucide-react"
+import { ArrowBigLeft, Trash, View } from "lucide-react"
 import Link from "next/link"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
@@ -17,6 +17,8 @@ export default function UserAdminDashboard() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const bookFileInputRef = useRef<HTMLInputElement>(null)
   const [showAdd, setShowAdd] = useState(false)
+  const [submitting, setSubmitting] = useState(false);
+
   const router = useRouter()
 
   useEffect(() => {
@@ -63,37 +65,49 @@ export default function UserAdminDashboard() {
   // Only show books added by this user
   const userBooks = books.filter((b: any) => b.addedBy === currentUser.uid)
 
-  const handleAdd = async (e: any) => {
-    e.preventDefault()
-    if (!form.title || !form.author || !form.category || !form.link) return
-    try {
-      const payload = new FormData()
-      payload.append('title', form.title)
-      payload.append('author', form.author)
-      payload.append('category', form.category)
-      payload.append('link', form.link)
-      payload.append('description', form.description || "")
-      payload.append('addedBy', currentUser.uid)
-      if (form.coverImage instanceof File) {
-        payload.append('coverImage', form.coverImage)
-      }
-      if (form.bookFile instanceof File) {
-        payload.append('bookFile', form.bookFile)
-      }
-      // Debug: log FormData
-      for (let pair of payload.entries()) {
-        console.log('ADD_BOOK_PAYLOAD', pair[0]+ ':', pair[1])
-      }
-      await addBook(payload)
-      setShowAdd(false)
-      setForm({})
-      if (fileInputRef.current) fileInputRef.current.value = ""
-      if (bookFileInputRef.current) bookFileInputRef.current.value = ""
-      router.refresh()
-    } catch (err) {
-      console.error('Error adding book:', err)
+const handleAdd = async (e: any) => {
+  e.preventDefault();
+
+  if (!form.title || !form.author || !form.category || form.bookFile) return;
+
+  setSubmitting(true); // ✅ Start submitting
+
+  try {
+    const payload = new FormData();
+    payload.append('title', form.title);
+    payload.append('author', form.author);
+    payload.append('category', form.category);
+    payload.append('link', form.link);
+    payload.append('description', form.description || "");
+    payload.append('addedBy', currentUser.uid);
+
+    if (form.coverImage instanceof File) {
+      payload.append('coverImage', form.coverImage);
     }
+
+    if (form.bookFile instanceof File) {
+      payload.append('bookFile', form.bookFile);
+    }
+
+    // Debug log
+    for (let pair of payload.entries()) {
+      console.log('ADD_BOOK_PAYLOAD', pair[0] + ':', pair[1]);
+    }
+
+    await addBook(payload);
+    
+    setShowAdd(false);
+    setForm({});
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (bookFileInputRef.current) bookFileInputRef.current.value = "";
+    router.refresh();
+  } catch (err) {
+    console.error('Error adding book:', err);
+  } finally {
+    setSubmitting(false); // ✅ Done submitting
   }
+};
+
 
   const handleEdit = async (e: any) => {
     e.preventDefault()
@@ -140,15 +154,15 @@ export default function UserAdminDashboard() {
               setForm((f: any) => ({ ...f, bookFile: file }))
             }} />
           </div>
-          <button className="md:col-span-2 bg-[#70992f] hover:bg-[#55731f] text-white px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200">Add</button>
+          <button  type="submit" disabled={submitting} className="md:col-span-2 bg-[#70992f] hover:bg-[#55731f] text-white px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200">{submitting ? "Submitting..." : "Add"}</button>
         </form>
       )}
       <div className="overflow-x-auto">
         <table className="w-full border border-[#dbaf2c] rounded-lg bg-white shadow">
           <thead>
             <tr className="bg-[#dbaf2c] text-white">
-              <th className="p-3">Cover</th>
-              <th className="p-3">Title</th>
+{/*               <th className="p-3">Cover</th>
+ */}              <th className="p-3">Title</th>
               <th className="p-3">Author</th>
               <th className="p-3">Category</th>
               <th className="p-3">Actions</th>
@@ -156,20 +170,20 @@ export default function UserAdminDashboard() {
           </thead>
           <tbody>
             {userBooks.map((book: any, idx: number) => (
-              <tr key={book._id || book.id || idx} className="border-t border-[#dbaf2c] hover:bg-[#f6f2e3] transition">
-                <td className="p-3">
+              <tr key={book._id || book.id || idx} className="border-t  border-[#dbaf2c] hover:bg-[#f6f2e3] transition">
+                {/* <td className="p-3">
                   {book.coverImage ? (
                     <img src={book.coverImage + '?v=' + new Date().getTime()} alt="Cover" className="w-16 h-24 object-cover rounded border border-[#dbaf2c]" />
                   ) : (
                     <div className="w-16 h-24 bg-gray-200 flex items-center justify-center rounded text-gray-400">No Image</div>
                   )}
-                </td>
+                </td> */}
                 <td className="p-3 font-medium">{book.title}</td>
                 <td className="p-3">{book.author}</td>
                 <td className="p-3">{book.category || '-'}</td>
-                <td className="p-3 flex gap-2">
-                  <button onClick={() => deleteBook(book._id || book.id)} className="text-red-600 hover:text-red-700">Delete</button>
-                  <button onClick={() => { setViewBook(book); setEditForm(book); }} className="text-blue-600 hover:text-blue-800">View More</button>
+                <td className="p-3 items-center justify-center self-center flex gap-2">
+                  <button onClick={() => deleteBook(book._id || book.id)} className="text-red-600 hover:text-red-700"><Trash className="text-sm"/></button>
+                  <button onClick={() => { setViewBook(book); setEditForm(book); }} className="text-blue-600 hover:text-blue-800"><View className="text-sm"/></button>
                 </td>
               </tr>
             ))}

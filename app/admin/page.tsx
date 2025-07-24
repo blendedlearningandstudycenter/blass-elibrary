@@ -17,6 +17,8 @@ export default function AdminDashboard() {
   const bookFileInputRef = useRef<HTMLInputElement>(null)
   const [viewBook, setViewBook] = useState<any | null>(null)
   const [uploaderMap, setUploaderMap] = useState<Record<string, { name?: string; email?: string }>>({})
+  const [submitting, setSubmitting] = useState(false);
+  
   const router = useRouter()
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -68,15 +70,17 @@ export default function AdminDashboard() {
   const handleAdd = async (e: any) => {
     e.preventDefault()
     // Frontend validation for required fields
-    if (!form.title || !form.author || !form.category || !form.link) {
+    if (!form.title || !form.author || !form.category || !form.bookFile) {
       toast({
         title: "Missing Fields",
         description: "Title, Author, Category, and Link are required.",
         variant: "destructive",
         duration: 3000,
       })
+      alert("Title, Author, Category, and Link are required.")
       return
     }
+      setSubmitting(true); // ✅ Start submitting
     try {
       const payload = new FormData()
       payload.append('title', form.title || '')
@@ -158,7 +162,7 @@ export default function AdminDashboard() {
               setForm((f: any) => ({ ...f, bookFile: file }))
             }} />
           </div>
-          <button className="md:col-span-2 bg-[#70992f] hover:bg-[#55731f] text-white px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200">Add</button>
+         <button  type="submit" disabled={submitting} className="md:col-span-2 bg-[#70992f] hover:bg-[#55731f] text-white px-6 py-2 rounded-lg font-semibold shadow transition-colors duration-200">{submitting ? "Submitting..." : "Add"}</button>
         </form>
       )}
       <div className="overflow-x-auto">

@@ -60,6 +60,9 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     await signOut(auth)
+    localStorage.getItem("isAdmin") && localStorage.removeItem("isAdmin")
+    localStorage.getItem("userEmail") && localStorage.removeItem("userEmail")
+    localStorage.getItem("userlogged") && localStorage.removeItem("userlogged")
     router.push("/login")
   }
 

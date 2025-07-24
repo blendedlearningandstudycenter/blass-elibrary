@@ -39,6 +39,7 @@ export default function LoginPage() {
       console.log("User data:", userCredential.user)
       const user = userCredential.user
       console.log("User logged in:", user)
+      localStorage.setItem('userlogged', "true")
       // Check if user is admin in Firestore
       const adminDoc = await getDoc(doc(db, "users", user.uid))
       console.log(adminDoc.data)
@@ -54,6 +55,7 @@ export default function LoginPage() {
         localStorage.setItem("userEmail", form.email)
         router.push("/user-admin")
       }
+
     } catch (err: any) {
       setError(err.message || "Login failed. Try again.")
     } finally {
